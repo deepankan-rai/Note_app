@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.spring.entity.Notes;
+import com.example.spring.entity.Tag;
 import com.example.spring.entity.UserDtls;
 import com.example.spring.repository.NotesRepository;
+import com.example.spring.repository.TagRepository;
 import com.example.spring.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,7 +36,8 @@ public class UserController {
 
 	@Autowired
 	private NotesRepository notesRepository;
-
+	
+	
 	@ModelAttribute
 	public void addCommnData(Principal p, Model m) {
 		String email = p.getName();
@@ -41,7 +45,7 @@ public class UserController {
 		m.addAttribute("user", user);
 	}
 
-	@GetMapping("/addNotes")
+	@PostMapping("/addNotes")
 	public String home() {
 		return "user/add_notes";
 	}
@@ -63,7 +67,7 @@ public class UserController {
 		return "user/view_notes";
 	}
 
-	@GetMapping("/editNotes/{id}")
+	@PutMapping("/editNotes/{id}")
 	public String editNotes(@PathVariable int id, Model m) {
 
 		Optional<Notes> n = notesRepository.findById(id);
@@ -75,7 +79,7 @@ public class UserController {
 		return "user/edit_notes";
 	}
 
-	@PostMapping("/updateNotes")
+	@PutMapping("/updateNotes")
 	public String updateNotes(@ModelAttribute Notes notes, HttpSession session, Principal p) {
 		String email = p.getName();
 		UserDtls user = userRepository.findByEmail(email);
@@ -130,7 +134,7 @@ public class UserController {
 		return "redirect:/user/addNotes";
 	}
 	
-	@PostMapping("/updateUser")
+	@PutMapping("/updateUser")
 	public String updateUser(@ModelAttribute UserDtls user,HttpSession session,Model m)
 	{
 		Optional<UserDtls> Olduser=userRepository.findById(user.getId());
@@ -153,5 +157,9 @@ public class UserController {
 		
 		return "redirect:/user/viewProfile";
 	}
+	
+	
+	
+	
 	
 }
